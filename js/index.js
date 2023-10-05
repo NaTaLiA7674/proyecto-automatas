@@ -4,6 +4,19 @@ import Grafo from './Grafo'
 
 
 let g = new Grafo()
+g.ingresarVertices("A")
+g.ingresarVertices("B")
+g.ingresarVertices("C")
+g.getVertice("C").SetEstadoFinal(true)
+
+g.ingresarArista("A", "A", 1)
+g.ingresarArista("A", "A", 0)
+g.ingresarArista("A", "B", 0)
+g.ingresarArista("B", "C", 0)
+console.log(g.getNombreVertices());
+g.obtenerReverso()
+console.log(g.getNombreVertices());
+
 
 let $ = go.GraphObject.make
 let diagram = null
@@ -106,31 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     })
 
-    document.querySelector("#probarCadena").addEventListener("click", function () {
-       
-        if(g.listaVertices.length == 0){
-            alert("El autómata no tiene estados")
-        }
-
-        if(g.esAFND()) {
-            alert("El autómata no es un AFD")
-            return
-        } else {
-            
-            //* verificamos que la cadena no tenga caracteres que no estén en el alfabeto
-            const cadena = document.querySelector("#cadenaText").value
-
-            if(cadena.match(/[^01]/g)) {
-                alert("La cadena tiene caracteres que no están en el alfabeto (0,1)")
-                return
-            } else {
-               g.recorrerAutomata(cadena)
-            }
-
-        }
-
-    })
-})
+ })
 
 function createArrayOfNodesGrafo() {
 
