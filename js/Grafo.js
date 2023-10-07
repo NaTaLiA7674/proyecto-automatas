@@ -167,7 +167,7 @@ class Grafo {
         return null
     }
 
-    obetenerComplemento() {
+    obtenerComplemento() {
         let estadosFinales = this.getEstadosFinales() //Estados finales del autómata
         let estados = this.getNombreVertices() 
         let estadosNoFinales = [] 
@@ -192,7 +192,7 @@ class Grafo {
         })
 
         return estadosNoFinales
-    }
+    }    
 
     //Código para obtener el reverso de un autómata
     obtenerReverso() {
@@ -337,6 +337,18 @@ class Grafo {
         })
 
         return estadosFinales
+    }
+
+    getEstadosIniciales(){
+        let estadosIniciales= []
+
+        this.listaVertices.forEach(vertice => {
+            if (vertice.GetEstadoInicial()) { 
+                estadosIniciales.push(vertice.GetDato())
+            }
+        })
+
+        return estadosIniciales
     }
 }
 
