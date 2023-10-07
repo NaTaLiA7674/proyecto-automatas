@@ -13,7 +13,8 @@ g.ingresarArista("A", "A", 1)
 g.ingresarArista("A", "A", 0)
 g.ingresarArista("A", "B", 0)
 g.ingresarArista("B", "C", 0)
-console.log(g.getNombreVertices());
+
+let g2= new Grafo()
 
 
 let $ = go.GraphObject.make
@@ -35,9 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
        g.ingresarArista("A", "B", 0)
        g.ingresarArista("B", "C", 0)
       
-       mostrar()
-       // obtener el complemento
-
+       mostrar(g)
 
     })
 
@@ -67,14 +66,32 @@ document.addEventListener("DOMContentLoaded", function () {
         g.ingresarArista("G", "J", "")
         g.ingresarArista("I", "J", "")
 
-        mostrar()
+        mostrar(g)
+    })
+
+    document.querySelector("#a3").addEventListener("click", function () {
+        g2.reiniciarGrafo()
+        g2.ingresarVertices("A")
+        g2.ingresarVertices("B")
+        g2.ingresarVertices("C")
+        g2.ingresarVertices("D")
+        g2.ingresarVertices("E")
+        g2.getVertice("A").SetEstadoInicial(true)
+        g2.getVertice("E").SetEstadoFinal(true)
+
+        g2.ingresarArista("A", "B", 0)
+        g2.ingresarArista("B", "C", 1)
+        g2.ingresarArista("C", "D", 0)
+        g2.ingresarArista("D", "E", 1)
+       
+        mostrar(g2)
     })
 
  })
 
-function createArrayOfNodesGrafo() {
+function createArrayOfNodesGrafo(gr) {
 
-    const nodes = g.getNombreVertices()
+    const nodes = gr.getNombreVertices()
 
     const nodeDataArray = []
     nodes.forEach(node => {
@@ -84,9 +101,9 @@ function createArrayOfNodesGrafo() {
     return nodeDataArray
 }
 
-function createArrayOfLinksGrafo() {
+function createArrayOfLinksGrafo(gr) {
 
-    const links = g.getAristas()
+    const links = gr.getAristas()
 
     const linkDataArray = []
 
@@ -98,11 +115,11 @@ function createArrayOfLinksGrafo() {
 
 }
 
-function mostrar() {
+function mostrar(gr) {
    
     diagram.model = $(go.GraphLinksModel, {
-        nodeDataArray: createArrayOfNodesGrafo(),
-        linkDataArray: createArrayOfLinksGrafo()
+        nodeDataArray: createArrayOfNodesGrafo(gr),
+        linkDataArray: createArrayOfLinksGrafo(gr)
     })
 
     diagram.layout = $(go.LayeredDigraphLayout, {
@@ -128,8 +145,8 @@ function mostrar() {
     );
   
     
-
-    const estadosIniciales= g.getEstadosIniciales()
+    
+    const estadosIniciales= gr.getEstadosIniciales()
     let textIni = ""
     //se recorre el array de estados finales y se agrega al texto
     estadosIniciales.forEach(estado => {
@@ -138,7 +155,7 @@ function mostrar() {
     const textoIni = document.querySelector("#estadosIniciales")
     textoIni.innerHTML = `<span class="fw-bold">Estados iniciales del autómata:</span> ${textIni}`
 
-    const estadosFinales = g.getEstadosFinales()
+    const estadosFinales = gr.getEstadosFinales()
     let textFin = ""
     //se recorre el array de estados finales y se agrega al texto
     estadosFinales.forEach(estado => {
