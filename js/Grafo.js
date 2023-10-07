@@ -216,71 +216,84 @@ class Grafo {
         estadosFinales.forEach(estado => {
             this.getVertice(estado).SetEstadoFinal(false)
         })
-
-    }    
-
-    //Código para obtener el reverso de un autómata
+    }  
+    
     obtenerReverso() {
-        // 1. Verificar si hay más de un estado inicial en el autómata original.
-        let cantidadEstadosIniciales = 0;
-        let estadoInicialOriginal = null;
+        // Verificar si hay varios estados de aceptación
+        const estadosAceptacion = this.getEstadosFinales();
+        if (estadosAceptacion.length > 1) {
+            // Crear un nuevo estado de aceptación
+            const nuevoEstado = new Vertice("NuevoEstado", [], true, false, 0, 0);
 
-        for (let i = 0; i < this.listaVertices.length; i++) {
-            const vertice = this.listaVertices[i];
-            if (vertice.GetEstadoInicial()) {
-                cantidadEstadosIniciales++;
-                estadoInicialOriginal = vertice;
-            }
-        }
-
-        // 2. Si hay más de un estado inicial, crea un nuevo estado que será el estado inicial del autómata reverso.
-        if (cantidadEstadosIniciales > 1) {
-            const nuevoEstadoInicial = new Vertice("NuevoEstadoInicial", [], true, false, 0, 0);
-
-            // Agregar el nuevo estado inicial a la lista de vértices.
-            this.listaVertices.push(nuevoEstadoInicial);
-
-            // 3. Cambiar los estados de aceptación a no aceptación, excepto el nuevo estado.
-            this.listaVertices.forEach(vertice => {
-                if (vertice.GetEstadoFinal() && vertice !== nuevoEstadoInicial) {
-                    vertice.SetEstadoFinal(false);
-                }
+            // Convertir todos los estados de aceptación en estados no aceptación
+            estadosAceptacion.forEach(estado => {
+                estado.SetEstadoFinal(false);
+                // Crear transiciones lambda hacia el nuevo estado
+                this.ingresarArista(estado.GetDato(), nuevoEstado.GetDato(), 'λ');
             });
 
-            // 4. Crear transiciones lambda hacia el nuevo estado desde los estados originales de aceptación.
-            this.listaVertices.forEach(vertice => {
-                if (vertice.GetEstadoFinal() && vertice !== nuevoEstadoInicial) {
-                    const nuevaArista = new Arista(vertice, nuevoEstadoInicial, "lambda");
-                    this.listaAristas.push(nuevaArista);
-                }
-            });
-
-            // 5. Realizar la reversión de las aristas (invertir direcciones).
-            for (let i = 0; i < this.listaAristas.length; i++) {
-                const arista = this.listaAristas[i];
-                const origenOriginal = arista.Origen;
-                const destinoOriginal = arista.Destino;
-
-                // Cambiar la dirección de la arista.
-                arista.Origen = destinoOriginal;
-                arista.Destino = origenOriginal;
-            };
-
-        } else {
-            // Si solo hay un estado inicial, simplemente invierte las aristas existentes.
-            for (let i = 0; i < this.listaAristas.length; i++) {
-                const arista = this.listaAristas[i];
-                const origenOriginal = arista.Origen;
-                const destinoOriginal = arista.Destino;
-
-                // Cambiar la dirección de la arista.
-                arista.Origen = destinoOriginal;
-                arista.Destino = origenOriginal;
-            }
-
-            // Actualizar el estado inicial original como estado de aceptación.
-            estadoInicialOriginal.SetEstadoFinal(true);
+            // Establecer el nuevo estado como único estado de aceptación
+            nuevoEstado.SetEstadoFinal(true);
+            this.ingresarVertices(nuevoEstado.GetDato());
         }
+
+        // Invertir todas las transiciones
+        const aristasInvertidas = [];
+        this.listaAristas.forEach(arista => {
+            const nuevaArista = new Arista(arista.Destino, arista.Origen, arista.Peso);
+            aristasInvertidas.push(nuevaArista);
+        });
+
+        // Limpiar el grafo antes de agregar las aristas invertidas
+        this.listaAristas = [];
+        this.adyacencias = {};
+
+        // Agregar las aristas invertidas al grafo
+        aristasInvertidas.forEach(arista => {
+            this.listaAristas.push(arista);
+            const origen = arista.Origen.GetDato();
+            const destino = arista.Destino.GetDato();
+
+            if (!this.adyacencias.hasOwnProperty(origen)) {
+                this.adyacencias[origen] = [];
+            }
+            this.adyacencias[origen].push(destino);
+        });
+
+        // Cambiar el estado inicial por el estado de aceptación y viceversa
+        const estadosIniciales = this.getEstadosIniciales();
+        const estadosAceptacionNuevos = this.getEstadosFinales();
+        this.visitadosCp = [];
+        this.visitadosCa = [];
+
+        estadosIniciales.forEach(estado => {
+            estado.SetEstadoInicial(false);
+            estado.SetEstadoFinal(true);
+        });
+
+        estadosAceptacionNuevos.forEach(estado => {
+            estado.SetEstadoInicial(true);
+            estado.SetEstadoFinal(false);
+        });
+
+        // Eliminar estados inalcanzables
+        this.eliminarEstadosInalcanzables();
+    }
+
+    //Método para eliminar estados inalcanzables
+    eliminarEstadosInalcanzables() {
+        // Obtener los estados alcanzables desde el estado inicial
+        const estadosAlcanzables = this.obtenerEstadosAlcanzables(this.getEstadosIniciales());
+
+        // Obtener los estados no alcanzables
+        const estadosNoAlcanzables = this.getNombreVertices().filter(estado => {
+            return !estadosAlcanzables.includes(estado);
+        });
+
+        // Eliminar los estados no alcanzables
+        estadosNoAlcanzables.forEach(estado => {
+            this.eliminarEstado(estado);
+        });
     }
 
     //* MÉTODO QUE ME RECORRE EL AUTÓMATA (GRAFO) VIENDO SI LA CADENA CUMPLE O NO *//

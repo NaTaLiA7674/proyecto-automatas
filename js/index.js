@@ -7,14 +7,15 @@ let g = new Grafo()
 g.ingresarVertices("A")
 g.ingresarVertices("B")
 g.ingresarVertices("C")
-g.getVertice("C").SetEstadoFinal(true) 
+g.getVertice("C").SetEstadoFinal(true)
+g.getVertice("A").SetEstadoInicial(true)
 
 g.ingresarArista("A", "A", 1)
 g.ingresarArista("A", "A", 0)
 g.ingresarArista("A", "B", 0)
 g.ingresarArista("B", "C", 0)
 
-let g2= new Grafo()
+let g2 = new Grafo()
 
 
 let $ = go.GraphObject.make
@@ -25,18 +26,20 @@ document.addEventListener("DOMContentLoaded", function () {
     diagram = $(go.Diagram, "diagram")
 
     document.querySelector("#a1").addEventListener("click", function () {
-       g.reiniciarGrafo()
-       g.ingresarVertices("A")
-       g.ingresarVertices("B")
-       g.ingresarVertices("C")
-       g.getVertice("A").SetEstadoInicial(true)
-       g.getVertice("C").SetEstadoFinal(true)
-       g.ingresarArista("A", "A", 1)
-       g.ingresarArista("A", "A", 0)
-       g.ingresarArista("A", "B", 0)
-       g.ingresarArista("B", "C", 0)
-      
-       mostrar(g)
+        g.reiniciarGrafo()
+        g.ingresarVertices("A")
+        g.ingresarVertices("B")
+        g.ingresarVertices("C")
+        g.getVertice("A").SetEstadoInicial(true)
+        g.getVertice("C").SetEstadoFinal(true)
+        g.ingresarArista("A", "A", 1)
+        g.ingresarArista("A", "A", 0)
+        g.ingresarArista("A", "B", 0)
+        g.ingresarArista("B", "C", 0)
+
+        mostrar(g)
+
+        
 
     })
 
@@ -53,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
         g.ingresarVertices("I")
         g.ingresarVertices("J")
         g.getVertice("J").SetEstadoFinal(true)
+        g.getVertice("A").SetEstadoInicial(true)
 
         g.ingresarArista("A", "B", 0)
         g.ingresarArista("B", "C", "")
@@ -67,6 +71,9 @@ document.addEventListener("DOMContentLoaded", function () {
         g.ingresarArista("I", "J", "")
 
         mostrar(g)
+
+        
+        
     })
 
     document.querySelector("#a3").addEventListener("click", function () {
@@ -83,11 +90,14 @@ document.addEventListener("DOMContentLoaded", function () {
         g2.ingresarArista("B", "C", 1)
         g2.ingresarArista("C", "D", 0)
         g2.ingresarArista("D", "E", 1)
-       
+
         mostrar(g2)
+
+        
+
     })
 
- })
+})
 
 function createArrayOfNodesGrafo(gr) {
 
@@ -116,16 +126,16 @@ function createArrayOfLinksGrafo(gr) {
 }
 
 function mostrar(gr) {
-   
+
     diagram.model = $(go.GraphLinksModel, {
         nodeDataArray: createArrayOfNodesGrafo(gr),
         linkDataArray: createArrayOfLinksGrafo(gr)
     })
 
     diagram.layout = $(go.LayeredDigraphLayout, {
-        direction: 0,  
-        layerSpacing: 50,  
-        columnSpacing: 50 
+        direction: 0,
+        layerSpacing: 50,
+        columnSpacing: 50
     })
 
 
@@ -134,17 +144,17 @@ function mostrar(gr) {
         $(go.TextBlock, { margin: 8, font: "bold 12 px sans-serif" }, new go.Binding("text", "name"))
     )
     diagram.linkTemplate =
-    go.GraphObject.make(go.Link,
-      {
-        curve: go.Link.Bezier, 
-        routing: go.Link.AvoidsNodes, 
-      },
-      go.GraphObject.make(go.Shape, { stroke: "white" }),
-      go.GraphObject.make(go.Shape, { toArrow: "OpenTriangle", stroke: "white", fill: "white" }),
-      go.GraphObject.make(go.TextBlock, { stroke: "white", font: "bold 12px sans-serif" }, new go.Binding("text", "text"))
-    );
-  
-    const estadosIniciales= gr.getEstadosIniciales()
+        go.GraphObject.make(go.Link,
+            {
+                curve: go.Link.Bezier,
+                routing: go.Link.AvoidsNodes,
+            },
+            go.GraphObject.make(go.Shape, { stroke: "white" }),
+            go.GraphObject.make(go.Shape, { toArrow: "OpenTriangle", stroke: "white", fill: "white" }),
+            go.GraphObject.make(go.TextBlock, { stroke: "white", font: "bold 12px sans-serif" }, new go.Binding("text", "text"))
+        );
+
+    const estadosIniciales = gr.getEstadosIniciales()
     let textIni = ""
     //se recorre el array de estados finales y se agrega al texto
     estadosIniciales.forEach(estado => {
