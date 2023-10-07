@@ -167,31 +167,56 @@ class Grafo {
         return null
     }
 
-    obtenerComplemento() {
-        let estadosFinales = this.getEstadosFinales() //Estados finales del autómata
-        let estados = this.getNombreVertices() 
-        let estadosNoFinales = [] 
-        let estadosFinalesNoFinales = []
+    getEstadosFinales() {
+        let estadosFinales = []
 
-        // Se obtienen los estados no finales
-        estados.forEach(estado => {
-            if (!estadosFinales.includes(estado)) {
-                estadosNoFinales.push(estado)
-            }
-        })
-        
-        // Recorre los estados finales y verifica si están en los estados
-        estadosFinales.forEach(estado => {
-            if (!estados.includes(estado)) {
-                estadosFinalesNoFinales.push(estado)
+        this.listaVertices.forEach(vertice => {
+            if (vertice.GetEstadoFinal()) { 
+                estadosFinales.push(vertice.GetDato())
             }
         })
 
-        estadosFinalesNoFinales.forEach(estado => {
-            estadosNoFinales.push(estado)
+        return estadosFinales
+    }
+
+    getEstadosNoFinales() {
+        let estadosNoFinales = []
+
+        this.listaVertices.forEach(vertice => {
+            if (!vertice.GetEstadoFinal()) { 
+                estadosNoFinales.push(vertice.GetDato())
+            }
         })
 
         return estadosNoFinales
+    }
+
+    getEstadosIniciales(){
+        let estadosIniciales= []
+
+        this.listaVertices.forEach(vertice => {
+            if (vertice.GetEstadoInicial()) { 
+                estadosIniciales.push(vertice.GetDato())
+            }
+        })
+
+        return estadosIniciales
+    } 
+
+    obtenerComplemento() {
+        let estadosFinales = this.getEstadosFinales() //Estados finales del autómata
+        let estadosNoFinales = this.getEstadosNoFinales() //Estados no finales del autómata
+
+        // los estados no finales o iniciales pasan a ser finales
+        estadosNoFinales.forEach(estado => {
+            this.getVertice(estado).SetEstadoFinal(true)
+        })
+
+        // los estados finales pasan a ser no finales
+        estadosFinales.forEach(estado => {
+            this.getVertice(estado).SetEstadoFinal(false)
+        })
+
     }    
 
     //Código para obtener el reverso de un autómata
@@ -327,29 +352,7 @@ class Grafo {
         return false
     }
 
-    getEstadosFinales() {
-        let estadosFinales = []
-
-        this.listaVertices.forEach(vertice => {
-            if (vertice.GetEstadoFinal()) { 
-                estadosFinales.push(vertice.GetDato())
-            }
-        })
-
-        return estadosFinales
-    }
-
-    getEstadosIniciales(){
-        let estadosIniciales= []
-
-        this.listaVertices.forEach(vertice => {
-            if (vertice.GetEstadoInicial()) { 
-                estadosIniciales.push(vertice.GetDato())
-            }
-        })
-
-        return estadosIniciales
-    }
+    
 }
 
 export default Grafo
