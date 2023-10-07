@@ -72,61 +72,13 @@ class Grafo {
         return this.listaAristas
     }
 
-    // obtener aristas de un vertice, consultar para que sirve
-    getAristasDeVertice(vertice) {
-        const aristas = []
-        for (let i = 0; i < this.listaAristas.length; i++) {
-            if (this.listaAristas[i].Origen.dato === vertice) {
-                aristas.push(this.listaAristas[i])
-            }
-        }
-        return aristas
-    }
-
-    mostrarAristas() {
-        for (let i = 0; i < this.listaAristas.length; i++) {
-            console.log(`Origen: ${this.listaAristas[i].Origen.GetDato()} Destino: ${this.listaAristas[i].Destino.GetDato()} Peso: ${this.listaAristas[i].Peso}`)
-        }
-    }
-
+    //! REPETIDO
     GetNombreVertices() {
         const vertices = []
         for (let i = 0; i < this.listaVertices.length; i++) {
             vertices.push(this.listaVertices[i].dato)
         }
         return vertices
-    }
-
-    IngresarArista(Origen, Destino, Peso) {
-        // for (let i = 0;i < this.listaAristas.length;i++) {
-        //     // verificar si ya existe una arista con ese peso
-        //     if (this.listaAristas[i].Origen.dato == Origen && this.listaAristas[i].Peso == Peso) {
-        //         console.log("Ya existe una arista con ese peso")
-        //         return
-        //     }
-        // }
-
-        this.listaAristas.push(new Arista(this.getVertice(Origen), this.getVertice(Destino), Peso))
-
-        this.getVertice(this.getVertice(Origen).GetDato()).ListaAdyacentes.push(this.getVertice(Destino))
-    }
-
-    getAristasDeVertice(vertice) {
-        let aristas = []
-
-        for (let i = 0; i < this.listaAristas.length; i++) {
-            if (this.listaAristas[i].Origen.dato == vertice) {
-                aristas.push(this.listaAristas[i])
-            }
-        }
-
-        return aristas
-    }
-
-    mostrarAristas() {
-        for (let i = 0; i < this.listaAristas.length; i++) {
-            console.log(`Origen: ${this.listaAristas[i].Origen.GetDato()} Destino: ${this.listaAristas[i].Destino.GetDato()} Peso: ${this.listaAristas[i].Peso}`)
-        }
     }
 
     getNombreVertices() {
@@ -137,6 +89,21 @@ class Grafo {
         }
 
         return vertices
+    }
+
+    //! REPETIDO
+    IngresarArista(Origen, Destino, Peso) {
+        // for (let i = 0;i < this.listaAristas.length;i++) {
+        //     // verificar si ya existe una arista con ese peso
+        //     if (this.listaAristas[i].Origen.dato == Origen && this.listaAristas[i].Peso == Peso) {
+        //         console.log("Ya existe una arista con ese peso")
+        //         return
+        //     }
+        // }
+
+        this.listaAristas.push(new Arista(this.getVertice(Origen), this.getVertice(Destino), Peso))
+        // aqui se agrega la arista a la lista de adyacencias
+        this.getVertice(this.getVertice(Origen).GetDato()).ListaAdyacentes.push(this.getVertice(Destino))
     }
 
     ingresarArista(Origen, Destino, Peso) {
@@ -154,6 +121,43 @@ class Grafo {
         this.getVertice(this.getVertice(Origen).GetDato()).ListaAdyacentes.push(this.getVertice(Destino))
     }
 
+    //! REPETIDO
+    // obtener aristas de un vertice
+    getAristasDeVertice(vertice) {
+        const aristas = []
+        for (let i = 0; i < this.listaAristas.length; i++) {
+            if (this.listaAristas[i].Origen.dato === vertice) { 
+                aristas.push(this.listaAristas[i])
+            }
+        }
+        return aristas
+    }
+    getAristasDeVertice(vertice) {
+        let aristas = []
+
+        for (let i = 0; i < this.listaAristas.length; i++) {
+            if (this.listaAristas[i].Origen.dato == vertice) {
+                aristas.push(this.listaAristas[i])
+            }
+        }
+
+        return aristas
+    }
+
+    //! REPETIDO
+    mostrarAristas() {
+        for (let i = 0; i < this.listaAristas.length; i++) {
+            console.log(`Origen: ${this.listaAristas[i].Origen.GetDato()} Destino: ${this.listaAristas[i].Destino.GetDato()} Peso: ${this.listaAristas[i].Peso}`)
+        }
+    }
+
+    mostrarAristas() {
+        for (let i = 0; i < this.listaAristas.length; i++) {
+            console.log(`Origen: ${this.listaAristas[i].Origen.GetDato()} Destino: ${this.listaAristas[i].Destino.GetDato()} Peso: ${this.listaAristas[i].Peso}`)
+        }
+    }
+    
+    //Devuelve el vértice que tenga el dato que se le pase como parámetro
     getVertice(dato) {
         for (let i = 0; i < this.listaVertices.length; i++) {
             if (dato === this.listaVertices[i].dato) {
@@ -163,19 +167,20 @@ class Grafo {
         return null
     }
 
-    //create a method that allows me to get the complement of an automaton (the normal states changes to final states and the final states changes to normal states)
     obetenerComplemento() {
-        let estadosFinales = this.getEstadosFinales()
-        let estados = this.getNombreVertices()
-        let estadosNoFinales = []
+        let estadosFinales = this.getEstadosFinales() //Estados finales del autómata
+        let estados = this.getNombreVertices() 
+        let estadosNoFinales = [] 
         let estadosFinalesNoFinales = []
 
+        // Se obtienen los estados no finales
         estados.forEach(estado => {
             if (!estadosFinales.includes(estado)) {
                 estadosNoFinales.push(estado)
             }
         })
-
+        
+        // Recorre los estados finales y verifica si están en los estados
         estadosFinales.forEach(estado => {
             if (!estados.includes(estado)) {
                 estadosFinalesNoFinales.push(estado)
@@ -326,16 +331,13 @@ class Grafo {
         let estadosFinales = []
 
         this.listaVertices.forEach(vertice => {
-            if (vertice.GetEstadoFinal()) {
+            if (vertice.GetEstadoFinal()) { 
                 estadosFinales.push(vertice.GetDato())
             }
         })
 
         return estadosFinales
     }
-
-
-    
 }
 
 export default Grafo

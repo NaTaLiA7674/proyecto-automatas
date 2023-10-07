@@ -3,6 +3,7 @@ class Vertice {
         this.dato = dato
         this.ListaAdyacentes = []
         this.estadoFinal = false
+        this.estadoInicial= false
     }
 
     GetEstadoFinal() {
@@ -27,6 +28,14 @@ class Vertice {
 
     SetAdyacentes(adyacentes) {
         this.ListaAdyacentes = adyacentes
+    }
+
+    GetEstadoInicial() {
+        return this.estadoInicial
+    }
+
+    SetEstadoInicial(estadoInicial) {
+        this.estadoInicial = estadoInicial
     }
 
 }

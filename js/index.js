@@ -7,14 +7,13 @@ let g = new Grafo()
 g.ingresarVertices("A")
 g.ingresarVertices("B")
 g.ingresarVertices("C")
-g.getVertice("C").SetEstadoFinal(true)
+g.getVertice("C").SetEstadoFinal(true) 
 
 g.ingresarArista("A", "A", 1)
 g.ingresarArista("A", "A", 0)
 g.ingresarArista("A", "B", 0)
 g.ingresarArista("B", "C", 0)
 console.log(g.getNombreVertices());
-g.obtenerReverso()
 console.log(g.getNombreVertices());
 
 
