@@ -144,8 +144,6 @@ function mostrar(gr) {
       go.GraphObject.make(go.TextBlock, { stroke: "white", font: "bold 12px sans-serif" }, new go.Binding("text", "text"))
     );
   
-    
-    
     const estadosIniciales= gr.getEstadosIniciales()
     let textIni = ""
     //se recorre el array de estados finales y se agrega al texto
