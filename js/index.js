@@ -1,8 +1,6 @@
 import go from 'gojs'
 import Grafo from './Grafo'
 
-
-
 let g = new Grafo()
 g.ingresarVertices("A")
 g.ingresarVertices("B")
@@ -15,8 +13,40 @@ g.ingresarArista("A", "A", 0)
 g.ingresarArista("A", "B", 0)
 g.ingresarArista("B", "C", 0)
 
-let g2 = new Grafo()
 
+let grafoOpcionUno = new Grafo()
+grafoOpcionUno.ingresarVertices("D")
+grafoOpcionUno.ingresarVertices("E")
+grafoOpcionUno.ingresarVertices("F")
+grafoOpcionUno.getVertice("D").SetEstadoFinal(true)
+grafoOpcionUno.getVertice("E").SetEstadoInicial(true)
+
+grafoOpcionUno.ingresarArista("D", "E", 1)
+grafoOpcionUno.ingresarArista("F", "E", 0)
+
+let grafoOpcionDos = new Grafo()
+grafoOpcionDos.ingresarVertices("G")
+grafoOpcionDos.ingresarVertices("H")
+grafoOpcionDos.ingresarVertices("I")
+grafoOpcionDos.getVertice("I").SetEstadoFinal(true)
+grafoOpcionDos.getVertice("G").SetEstadoInicial(true)
+
+grafoOpcionDos.ingresarArista("G", "H", 1)
+grafoOpcionDos.ingresarArista("H", "I", 0)
+grafoOpcionDos.ingresarArista("I", "I", 0)
+
+let grafoOpcionTres = new Grafo()
+grafoOpcionTres.ingresarVertices("J")
+grafoOpcionTres.ingresarVertices("K")
+grafoOpcionTres.ingresarVertices("L")
+grafoOpcionTres.getVertice("J").SetEstadoFinal(true)
+grafoOpcionTres.getVertice("L").SetEstadoInicial(true)
+
+grafoOpcionTres.ingresarArista("J", "J", 0)
+grafoOpcionTres.ingresarArista("K", "L", 0)
+grafoOpcionTres.ingresarArista("L", "J", 1)
+
+const opcionesGrafos = [grafoOpcionUno, grafoOpcionDos, grafoOpcionTres]
 
 let $ = go.GraphObject.make
 let diagram = null
@@ -24,6 +54,7 @@ let diagram = null
 document.addEventListener("DOMContentLoaded", function () {
 
     diagram = $(go.Diagram, "diagram")
+    mostrar()
 
     document.querySelector("#a1").addEventListener("click", function () {
         g.reiniciarGrafo()
@@ -37,9 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
         g.ingresarArista("A", "B", 0)
         g.ingresarArista("B", "C", 0)
 
-        mostrar(g)
-
-        
+        mostrar()
 
     })
 
@@ -70,38 +99,79 @@ document.addEventListener("DOMContentLoaded", function () {
         g.ingresarArista("G", "J", "")
         g.ingresarArista("I", "J", "")
 
-        mostrar(g)
+        mostrar()
 
-        
-        
     })
 
     document.querySelector("#a3").addEventListener("click", function () {
-        g2.reiniciarGrafo()
-        g2.ingresarVertices("A")
-        g2.ingresarVertices("B")
-        g2.ingresarVertices("C")
-        g2.ingresarVertices("D")
-        g2.ingresarVertices("E")
-        g2.getVertice("A").SetEstadoInicial(true)
-        g2.getVertice("E").SetEstadoFinal(true)
+        g.reiniciarGrafo()
+        g.ingresarVertices("A")
+        g.ingresarVertices("B")
+        g.ingresarVertices("C")
+        g.ingresarVertices("D")
+        g.ingresarVertices("E")
+        g.getVertice("A").SetEstadoInicial(true)
+        g.getVertice("E").SetEstadoFinal(true)
 
-        g2.ingresarArista("A", "B", 0)
-        g2.ingresarArista("B", "C", 1)
-        g2.ingresarArista("C", "D", 0)
-        g2.ingresarArista("D", "E", 1)
-
-        mostrar(g2)
-
-        
+        g.ingresarArista("A", "B", 0)
+        g.ingresarArista("B", "C", 1)
+        g.ingresarArista("C", "D", 0)
+        g.ingresarArista("D", "E", 1)
+        g.obtenerComplemento()
+        mostrar()
 
     })
 
+    document.querySelector("#complemento").addEventListener("click", function () {
+        complemento()
+    })
+
+    document.querySelector("#reverso").addEventListener("click", function () {
+        reverso()
+    })
+
+    document.querySelector("#union").addEventListener("click", function () {
+        union()
+    })
+
+    document.querySelector("#inter").addEventListener("click", function () {
+        interseccion()
+    })
+
+
+
 })
 
-function createArrayOfNodesGrafo(gr) {
+function obtenerGrafoAleatorio() {
+    const indiceAleatorio = Math.floor(Math.random() * opcionesGrafos.length)
+    return opcionesGrafos[indiceAleatorio]
+}
 
-    const nodes = gr.getNombreVertices()
+function complemento() {
+    g.obtenerComplemento()
+    mostrar()
+}
+
+function reverso() {
+    // ejecutar el método de reverso
+    mostrar()
+}
+
+function union() {
+    let grafoSeleccionado= obtenerGrafoAleatorio()
+    //!EJECUTAR MÉTODO QUE ME HACE LA UNIÓN Y LE PASO EL GRAFO SELECCIONADO
+    mostrar()
+}
+
+function interseccion() { 
+    let grafoSeleccionado= obtenerGrafoAleatorio()
+    //!EJECUTAR MÉTODO QUE ME HACE LA INTERSECCIÓN Y LE PASO EL GRAFO SELECCIONADO
+    mostrar()
+}
+
+function createArrayOfNodesGrafo() {
+
+    const nodes = g.getNombreVertices()
 
     const nodeDataArray = []
     nodes.forEach(node => {
@@ -111,9 +181,9 @@ function createArrayOfNodesGrafo(gr) {
     return nodeDataArray
 }
 
-function createArrayOfLinksGrafo(gr) {
+function createArrayOfLinksGrafo() {
 
-    const links = gr.getAristas()
+    const links = g.getAristas()
 
     const linkDataArray = []
 
@@ -125,11 +195,11 @@ function createArrayOfLinksGrafo(gr) {
 
 }
 
-function mostrar(gr) {
+function mostrar() {
 
     diagram.model = $(go.GraphLinksModel, {
-        nodeDataArray: createArrayOfNodesGrafo(gr),
-        linkDataArray: createArrayOfLinksGrafo(gr)
+        nodeDataArray: createArrayOfNodesGrafo(),
+        linkDataArray: createArrayOfLinksGrafo()
     })
 
     diagram.layout = $(go.LayeredDigraphLayout, {
@@ -152,9 +222,9 @@ function mostrar(gr) {
             go.GraphObject.make(go.Shape, { stroke: "white" }),
             go.GraphObject.make(go.Shape, { toArrow: "OpenTriangle", stroke: "white", fill: "white" }),
             go.GraphObject.make(go.TextBlock, { stroke: "white", font: "bold 12px sans-serif" }, new go.Binding("text", "text"))
-        );
+        )
 
-    const estadosIniciales = gr.getEstadosIniciales()
+    const estadosIniciales = g.getEstadosIniciales()
     let textIni = ""
     //se recorre el array de estados finales y se agrega al texto
     estadosIniciales.forEach(estado => {
@@ -163,7 +233,17 @@ function mostrar(gr) {
     const textoIni = document.querySelector("#estadosIniciales")
     textoIni.innerHTML = `<span class="fw-bold">Estados iniciales del autómata:</span> ${textIni}`
 
-    const estadosFinales = gr.getEstadosFinales()
+    const estadosNormales= g.getEstadosNoFinales()
+    let textNor= ""
+
+    estadosNormales.forEach(estado =>{
+        textNor += `${estado} `
+    })
+    const textoNor= document.querySelector("#estadosNormales")
+    textoNor.innerHTML = `<span class="fw-bold">Estados normales del autómata:</span> ${textNor}`
+
+
+    const estadosFinales = g.getEstadosFinales()
     let textFin = ""
     //se recorre el array de estados finales y se agrega al texto
     estadosFinales.forEach(estado => {

@@ -72,15 +72,6 @@ class Grafo {
         return this.listaAristas
     }
 
-    //! REPETIDO
-    GetNombreVertices() {
-        const vertices = []
-        for (let i = 0; i < this.listaVertices.length; i++) {
-            vertices.push(this.listaVertices[i].dato)
-        }
-        return vertices
-    }
-
     getNombreVertices() {
         let vertices = []
 
@@ -89,21 +80,6 @@ class Grafo {
         }
 
         return vertices
-    }
-
-    //! REPETIDO
-    IngresarArista(Origen, Destino, Peso) {
-        // for (let i = 0;i < this.listaAristas.length;i++) {
-        //     // verificar si ya existe una arista con ese peso
-        //     if (this.listaAristas[i].Origen.dato == Origen && this.listaAristas[i].Peso == Peso) {
-        //         console.log("Ya existe una arista con ese peso")
-        //         return
-        //     }
-        // }
-
-        this.listaAristas.push(new Arista(this.getVertice(Origen), this.getVertice(Destino), Peso))
-        // aqui se agrega la arista a la lista de adyacencias
-        this.getVertice(this.getVertice(Origen).GetDato()).ListaAdyacentes.push(this.getVertice(Destino))
     }
 
     ingresarArista(Origen, Destino, Peso) {
@@ -121,17 +97,6 @@ class Grafo {
         this.getVertice(this.getVertice(Origen).GetDato()).ListaAdyacentes.push(this.getVertice(Destino))
     }
 
-    //! REPETIDO
-    // obtener aristas de un vertice
-    getAristasDeVertice(vertice) {
-        const aristas = []
-        for (let i = 0; i < this.listaAristas.length; i++) {
-            if (this.listaAristas[i].Origen.dato === vertice) { 
-                aristas.push(this.listaAristas[i])
-            }
-        }
-        return aristas
-    }
     getAristasDeVertice(vertice) {
         let aristas = []
 
@@ -142,13 +107,6 @@ class Grafo {
         }
 
         return aristas
-    }
-
-    //! REPETIDO
-    mostrarAristas() {
-        for (let i = 0; i < this.listaAristas.length; i++) {
-            console.log(`Origen: ${this.listaAristas[i].Origen.GetDato()} Destino: ${this.listaAristas[i].Destino.GetDato()} Peso: ${this.listaAristas[i].Peso}`)
-        }
     }
 
     mostrarAristas() {
