@@ -153,18 +153,18 @@ function complemento() {
 }
 
 function reverso() {
-    // ejecutar el método de reverso
+    g.obtenerReverso()
     mostrar()
 }
 
 function union() {
-    let grafoSeleccionado= obtenerGrafoAleatorio()
+    let grafoSeleccionado = obtenerGrafoAleatorio()
     //!EJECUTAR MÉTODO QUE ME HACE LA UNIÓN Y LE PASO EL GRAFO SELECCIONADO
     mostrar()
 }
 
-function interseccion() { 
-    let grafoSeleccionado= obtenerGrafoAleatorio()
+function interseccion() {
+    let grafoSeleccionado = obtenerGrafoAleatorio()
     //!EJECUTAR MÉTODO QUE ME HACE LA INTERSECCIÓN Y LE PASO EL GRAFO SELECCIONADO
     mostrar()
 }
@@ -233,13 +233,13 @@ function mostrar() {
     const textoIni = document.querySelector("#estadosIniciales")
     textoIni.innerHTML = `<span class="fw-bold">Estados iniciales del autómata:</span> ${textIni}`
 
-    const estadosNormales= g.getEstadosNoFinales()
-    let textNor= ""
+    const estadosNormales = g.getEstadosNoFinales()
+    let textNor = ""
 
-    estadosNormales.forEach(estado =>{
+    estadosNormales.forEach(estado => {
         textNor += `${estado} `
     })
-    const textoNor= document.querySelector("#estadosNormales")
+    const textoNor = document.querySelector("#estadosNormales")
     textoNor.innerHTML = `<span class="fw-bold">Estados normales del autómata:</span> ${textNor}`
 
 
