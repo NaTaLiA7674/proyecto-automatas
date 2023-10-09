@@ -5,13 +5,19 @@ let g = new Grafo()
 g.ingresarVertices("A")
 g.ingresarVertices("B")
 g.ingresarVertices("C")
-g.getVertice("C").SetEstadoFinal(true)
+g.ingresarVertices("D")
+g.getVertice("A").SetEstadoFinal(true)
+g.getVertice("B").SetEstadoFinal(true)
+g.getVertice("D").SetEstadoFinal(true)
 g.getVertice("A").SetEstadoInicial(true)
 
-g.ingresarArista("A", "A", 1)
-g.ingresarArista("A", "A", 0)
 g.ingresarArista("A", "B", 0)
 g.ingresarArista("B", "C", 0)
+g.ingresarArista("C", "C", 0)
+g.ingresarArista("C", "C", 1)
+g.ingresarArista("A", "D", 1)
+g.ingresarArista("B", "D", 1)
+
 
 
 let grafoOpcionUno = new Grafo()

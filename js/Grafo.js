@@ -9,7 +9,6 @@ class Grafo {
         this.listaAristas = []
         this.visitadosCp = []
         this.visitadosCa = []
-        this.adyacencias = {}
         this.visitadosCKruskal = []
         this.repetidos = 0
         this.obstruidos = []
@@ -21,13 +20,21 @@ class Grafo {
         return this.listaVertices
     }
 
-    getListaAristas() {
+    getAristas() {
         return this.listaAristas
+    }
+
+    getVisitadosp() {
+        return this.visitadosCp
+    }
+
+    getVisitadosa() {
+        return this.visitadosCa
     }
 
     ingresarVertices(dato) {
         if (!this.verificarExisteVertice(dato, this.listaVertices)) {
-            this.listaVertices.push(new Vertice(dato, [], false, 0, 0))
+            this.listaVertices.push(new Vertice(dato))
         }
     }
 
@@ -54,22 +61,46 @@ class Grafo {
             }
         }
     }
+    //Devuelve el vértice que tenga el dato que se le pase como parámetro
+    getVertice(dato) {
+        for (let i = 0;i < this.listaVertices.length;i++) {
+            if (dato === this.listaVertices[i].dato) {
+                return this.listaVertices[i]
+            }
+        }
+        return null
+    }
+
+    getArista(Origen, Destino, Peso) {
+        for (let i = 0;i < g.listaAristas.length;i++) {
+            if (Origen == g.listaAristas[i].Origen.GetDato() && Destino == g.listaAristas[i].Destino.GetDato() && Peso == g.listaAristas[i].Peso) {
+                return g.listaAristas[i]
+            }
+        }
+        return null
+    }
+
+    verificarExisteArista(arista) {
+        for (let i = 0;i < g.listaAristas.length;i++) {
+            if (arista.Origen.GetDato() == g.listaAristas[i].Origen.GetDato() && arista.Destino.GetDato() == g.listaAristas[i].Destino.GetDato()) {
+                // console.log("Ya existe la arista");
+                // console.log("Origen: " + arista.Origen.GetDato() + " Destino: " + arista.Destino.GetDato());
+                return true
+            }
+        }
+        return false
+    }
 
     reiniciarGrafo() {
         this.listaVertices = []
         this.listaAristas = []
         this.visitadosCp = []
         this.visitadosCa = []
-        this.adyacencias = {}
         this.visitadosCKruskal = []
         this.repetidos = 0
         this.obstruidos = []
         this.aristasAmplitud = []
         this.estadosAuxiliar = []
-    }
-
-    getAristas() {
-        return this.listaAristas
     }
 
     getNombreVertices() {
@@ -115,15 +146,38 @@ class Grafo {
         }
     }
 
-    //Devuelve el vértice que tenga el dato que se le pase como parámetro
-    getVertice(dato) {
-        for (let i = 0;i < this.listaVertices.length;i++) {
-            if (dato === this.listaVertices[i].dato) {
-                return this.listaVertices[i]
+    // Recorrido en profundidad
+    recorridoProfundidad(dato) {
+
+        const listaVisitados = this.getVisitadosp()
+        //si el dato está en la lista de visitados
+        if (dato in listaVisitados) {
+            return
+        }
+        else {
+            // obtiene el vertice
+            let vertice = this.getVertice(dato)
+
+            if (vertice != null) {
+
+                // agrega el vertice a la lista de visitados con profundidad
+                this.visitadosCp.push(vertice)
+
+                // recorre la lista de adyacentes del vertice y hace llamada recursiva
+                for (let i = 0;i < vertice.ListaAdyacentes.length;i++) {
+                    this.recorridoProfundidad(vertice.ListaAdyacentes[i].dato)
+                }
             }
         }
-        return null
+        this.cantidadVerticesVisitadosProfundidad()
     }
+
+    // Método que me cuente la cantidad de vértices visitados por recorrido de profundidad
+    cantidadVerticesVisitadosProfundidad() {
+        let total = this.visitadosCp.length
+        console.log("Cantidad de vértices visitados en profundidad:", total)
+    }
+
 
     getEstadosFinales() {
         let estadosFinales = []
@@ -181,148 +235,119 @@ class Grafo {
         const estadosAceptacion = this.getEstadosFinales()
         if (estadosAceptacion.length > 1) {
             // Crear un nuevo estado de aceptación
-            const nuevoEstado = new Vertice("NuevoEstado", [], true, false, 0, 0)
+            this.ingresarVertices("NEW")
+            const nuevoEstado = this.listaVertices[this.listaVertices.length - 1].GetDato()
 
             // Convertir todos los estados de aceptación en estados no aceptación
             estadosAceptacion.forEach(estado => {
-                estado.SetEstadoFinal(false)
+                this.getVertice(estado).SetEstadoFinal(false)
                 // Crear transiciones lambda hacia el nuevo estado
-                this.ingresarArista(estado.GetDato(), nuevoEstado.GetDato(), 'λ')
+                this.ingresarArista(this.getVertice(estado).GetDato(), this.getVertice(nuevoEstado).GetDato(), "λ")
             })
 
             // Establecer el nuevo estado como único estado de aceptación
-            nuevoEstado.SetEstadoFinal(true)
-            this.ingresarVertices(nuevoEstado.GetDato())
+            this.getVertice(nuevoEstado).SetEstadoFinal(true)
         }
 
         // Invertir todas las transiciones
         const aristasInvertidas = []
         this.listaAristas.forEach(arista => {
             const nuevaArista = new Arista(arista.Destino, arista.Origen, arista.Peso)
+            // agregar la arista invertida a la lista de adyacencias del destino
             aristasInvertidas.push(nuevaArista)
         })
 
+
         // Limpiar el grafo antes de agregar las aristas invertidas
         this.listaAristas = []
-        this.adyacencias = {}
 
-        // Agregar las aristas invertidas al grafo
+        // Organizar las adyacencias de cada vértice en el grafo
+        this.listaVertices.forEach(vertice => {
+            vertice.ListaAdyacentes = []
+        })
+
+        // Recorro cada arista invertida y para cada origen el destino sera su adyacente
         aristasInvertidas.forEach(arista => {
             this.listaAristas.push(arista)
-            const origen = arista.Origen.GetDato()
-            const destino = arista.Destino.GetDato()
-
-            if (!this.adyacencias.hasOwnProperty(origen)) {
-                this.adyacencias[origen] = []
-            }
-            this.adyacencias[origen].push(destino)
+            const destino = this.getVertice(arista.Destino.dato)
+            const origen = this.getVertice(arista.Origen.dato)
+            origen.ListaAdyacentes.push(destino)
         })
 
         // Cambiar el estado inicial por el estado de aceptación y viceversa
         const estadosIniciales = this.getEstadosIniciales()
         const estadosAceptacionNuevos = this.getEstadosFinales()
-        this.visitadosCp = []
+        this.visitadosCp = [] // Reiniciar los visitados
         this.visitadosCa = []
 
         estadosIniciales.forEach(estado => {
-            estado.SetEstadoInicial(false)
-            estado.SetEstadoFinal(true)
+
+            this.getVertice(estado).SetEstadoInicial(false)
+            this.getVertice(estado).SetEstadoFinal(true)
         })
 
         estadosAceptacionNuevos.forEach(estado => {
-            estado.SetEstadoInicial(true)
-            estado.SetEstadoFinal(false)
+            this.getVertice(estado).SetEstadoInicial(true)
+            this.getVertice(estado).SetEstadoFinal(false)
         })
 
         // Eliminar estados inalcanzables
         this.eliminarEstadosInalcanzables()
     }
 
-    //Método para eliminar estados inalcanzables
-    eliminarEstadosInalcanzables() {
-        // Obtener los estados alcanzables desde el estado inicial
-        const estadosAlcanzables = this.obtenerEstadosAlcanzables(this.getEstadosIniciales())
+    /**Un estado es alcanzable si se puede llegar a él desde el estado inicial.
+         * Se recorre el grafo en profundidad desde el estado inicial y se guardan los estados visitados.
+         * Luego se comparan los estados visitados con los estados del grafo y se eliminan los estados no visitados.
+         * */
 
-        // Obtener los estados no alcanzables
-        const estadosNoAlcanzables = this.getNombreVertices().filter(estado => {
-            return !estadosAlcanzables.includes(estado)
+    eliminarEstadosInalcanzables() {
+
+        this.recorridoProfundidad(this.getEstadosIniciales()[0]) // prevenir por si llegan varios -que no debería pasar
+
+        const estadosAlcanzables = this.getVisitadosp()
+
+        // recorrer los estados alcanzables y guardarlos en una lista sin repetir
+        let listaEstadosAlcanzables = []
+        estadosAlcanzables.forEach(estado => {
+            listaEstadosAlcanzables.push(estado.GetDato())
+        })
+
+        let estadosASinRepeticiones = [...new Set(listaEstadosAlcanzables)]
+
+        // recorrer los estados del grafo y guardarlos en una lista sin repetir
+        let listaEstadosGrafo = []
+        this.listaVertices.forEach(vertice => {
+            listaEstadosGrafo.push(vertice.GetDato())
+        })
+
+        let estadosGSinRepeticiones = [...new Set(listaEstadosGrafo)]
+
+
+        // Filtrar los estados del grafo que no están en la lista de estados alcanzables
+        let estadosNoAlcanzables = []
+        estadosNoAlcanzables = estadosGSinRepeticiones.filter(estado => {
+            return !estadosASinRepeticiones.includes(estado)
         })
 
         // Eliminar los estados no alcanzables
         estadosNoAlcanzables.forEach(estado => {
-            this.eliminarEstado(estado)
+            this.eliminarVertice(estado)
+        })
+
+    }
+
+    /** Elimina el vértice que es inalcanzable */
+    eliminarVertice(vertice) {
+        // eliminar aristas que tengan como origen el vértice a eliminar
+        this.listaAristas = this.listaAristas.filter(arista => {
+            return arista.Origen.dato !== vertice
+        })
+
+        // eliminar vértice
+        this.listaVertices = this.listaVertices.filter(verticeF => {
+            return verticeF.GetDato() !== vertice
         })
     }
-
-    //* MÉTODO QUE ME RECORRE EL AUTÓMATA (GRAFO) VIENDO SI LA CADENA CUMPLE O NO *//
-    recorrerAutomata(cadena) {
-        console.log("Recorriendo el autómata con la cadena: " + cadena)
-
-        //* PASAMOS LA CADENA A UN ARREGLO DE CARACTERES *//
-        let cadenaArr = cadena.split('')
-
-        //* OBTENEMOS EL ESTADO INICIAL (EL PRIMER VERTICE)*//
-        let estadoInicial = this.listaVertices[0]
-
-        //* LLAMAMOS AL MÉTODO RECURSIVO ENCARGADO DE VERIFICAR SI LA CADENA CUMPLE O NO *//
-        //* PASAMOS EL ESTADO ACTUAL, LA POSICIÓN ACTUAL DE LA CADENA, EL ARREGLO DE CARACTERES *//
-        //* Y LA VENTANA PARA MOSTRAR EL RESULTADO *//
-        this.cambiarEstado(estadoInicial, 0, cadenaArr)
-    }
-
-    //* MÉTODO RECURSIVO ENCARGADO DE VERIFICAR SI LA CADENA CUMPLE O NO *//
-    cambiarEstado(estadoActual, posicionActual, cadenaArr,) {
-        //* VERIFICAMOS SI HEMOS LLEGADO AL FINAL DE LA CADENA *//
-        console.log(estadoActual.GetDato() + " " + posicionActual + " " + cadenaArr.length)
-        if (posicionActual == cadenaArr.length) {
-            if (estadoActual.estadoFinal) {
-                console.log('cadena válida')
-                alert('cadena válida')
-            } else {
-                console.log('cadena inválida')
-                alert('cadena inválida')
-            }
-            return
-        } else {
-            //* si el estado actual no tiene aristas
-            if (estadoActual.ListaAdyacentes.length == 0) {
-                console.log('cadena inválida')
-                alert('cadena inválida')
-                return
-            }
-        }
-
-        //* OBTENEMOS EL SIGUIENTE ESTADO A TRAVÉS DE LA TRANSICIÓN CORRESPONDIENTE *//
-        let siguienteEstado = null
-        this.listaAristas.forEach(arista => {
-            if (arista.Origen.GetDato() == estadoActual.GetDato() && arista.Peso == cadenaArr[posicionActual]) {
-                siguienteEstado = arista.Destino
-                //* LLAMAMOS RECURSIVAMENTE AL MÉTODO CON EL SIGUIENTE ESTADO Y LA SIGUIENTE POSICIÓN DE LA CADENA *//
-                this.cambiarEstado(siguienteEstado, posicionActual + 1, cadenaArr)
-            }
-        })
-    }
-
-    getArista(Origen, Destino, Peso) {
-        for (let i = 0;i < g.listaAristas.length;i++) {
-            if (Origen == g.listaAristas[i].Origen.GetDato() && Destino == g.listaAristas[i].Destino.GetDato() && Peso == g.listaAristas[i].Peso) {
-                return g.listaAristas[i]
-            }
-        }
-        return null
-    }
-
-    verificarExisteArista(arista) {
-        for (let i = 0;i < g.listaAristas.length;i++) {
-            if (arista.Origen.GetDato() == g.listaAristas[i].Origen.GetDato() && arista.Destino.GetDato() == g.listaAristas[i].Destino.GetDato()) {
-                // console.log("Ya existe la arista");
-                // console.log("Origen: " + arista.Origen.GetDato() + " Destino: " + arista.Destino.GetDato());
-                return true
-            }
-        }
-        return false
-    }
-
 
 }
 
