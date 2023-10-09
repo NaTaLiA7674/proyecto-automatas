@@ -18,39 +18,43 @@ g.ingresarArista("C", "C", 1)
 g.ingresarArista("A", "D", 1)
 g.ingresarArista("B", "D", 1)
 
-
-
 let grafoOpcionUno = new Grafo()
+grafoOpcionUno.ingresarVertices("A")
+grafoOpcionUno.ingresarVertices("B")
+grafoOpcionUno.ingresarVertices("C")
 grafoOpcionUno.ingresarVertices("D")
-grafoOpcionUno.ingresarVertices("E")
-grafoOpcionUno.ingresarVertices("F")
+grafoOpcionUno.getVertice("A").SetEstadoFinal(true)
+grafoOpcionUno.getVertice("B").SetEstadoFinal(true)
 grafoOpcionUno.getVertice("D").SetEstadoFinal(true)
-grafoOpcionUno.getVertice("E").SetEstadoInicial(true)
+grafoOpcionUno.getVertice("A").SetEstadoInicial(true)
 
-grafoOpcionUno.ingresarArista("D", "E", 1)
-grafoOpcionUno.ingresarArista("F", "E", 0)
+grafoOpcionUno.ingresarArista("A", "B", 0)
+grafoOpcionUno.ingresarArista("B", "C", 0)
+grafoOpcionUno.ingresarArista("C", "C", 0)
+grafoOpcionUno.ingresarArista("C", "C", 1)
+grafoOpcionUno.ingresarArista("A", "D", 1)
+grafoOpcionUno.ingresarArista("B", "D", 1)
+
 
 let grafoOpcionDos = new Grafo()
-grafoOpcionDos.ingresarVertices("G")
-grafoOpcionDos.ingresarVertices("H")
-grafoOpcionDos.ingresarVertices("I")
-grafoOpcionDos.getVertice("I").SetEstadoFinal(true)
-grafoOpcionDos.getVertice("G").SetEstadoInicial(true)
-
-grafoOpcionDos.ingresarArista("G", "H", 1)
-grafoOpcionDos.ingresarArista("H", "I", 0)
-grafoOpcionDos.ingresarArista("I", "I", 0)
+grafoOpcionDos.ingresarVertices("A")
+grafoOpcionDos.ingresarVertices("B")
+grafoOpcionDos.getVertice("A").SetEstadoInicial(true)
+grafoOpcionDos.getVertice("B").SetEstadoFinal(true)
+grafoOpcionDos.ingresarArista("A", "A", 0)
+grafoOpcionDos.ingresarArista("A", "B", 1)
+grafoOpcionDos.ingresarArista("B", "B", 0)
+grafoOpcionDos.ingresarArista("B", "B", 1)
 
 let grafoOpcionTres = new Grafo()
-grafoOpcionTres.ingresarVertices("J")
-grafoOpcionTres.ingresarVertices("K")
-grafoOpcionTres.ingresarVertices("L")
-grafoOpcionTres.getVertice("J").SetEstadoFinal(true)
-grafoOpcionTres.getVertice("L").SetEstadoInicial(true)
-
-grafoOpcionTres.ingresarArista("J", "J", 0)
-grafoOpcionTres.ingresarArista("K", "L", 0)
-grafoOpcionTres.ingresarArista("L", "J", 1)
+grafoOpcionTres.ingresarVertices("C")
+grafoOpcionTres.ingresarVertices("D")
+grafoOpcionTres.getVertice("C").SetEstadoInicial(true)
+grafoOpcionTres.getVertice("D").SetEstadoFinal(true)
+grafoOpcionTres.ingresarArista("C", "C", 1)
+grafoOpcionTres.ingresarArista("C", "D", 0)
+grafoOpcionTres.ingresarArista("D", "D", 0)
+grafoOpcionTres.ingresarArista("D", "D", 1)
 
 const opcionesGrafos = [grafoOpcionUno, grafoOpcionDos, grafoOpcionTres]
 
@@ -66,13 +70,12 @@ document.addEventListener("DOMContentLoaded", function () {
         g.reiniciarGrafo()
         g.ingresarVertices("A")
         g.ingresarVertices("B")
-        g.ingresarVertices("C")
         g.getVertice("A").SetEstadoInicial(true)
-        g.getVertice("C").SetEstadoFinal(true)
-        g.ingresarArista("A", "A", 1)
+        g.getVertice("B").SetEstadoFinal(true)
         g.ingresarArista("A", "A", 0)
-        g.ingresarArista("A", "B", 0)
-        g.ingresarArista("B", "C", 0)
+        g.ingresarArista("A", "B", 1)
+        g.ingresarArista("B", "B", 0)
+        g.ingresarArista("B", "B", 1)
 
         mostrar()
 
@@ -165,6 +168,7 @@ function reverso() {
 
 function union() {
     let grafoSeleccionado = obtenerGrafoAleatorio()
+    grafoOpcionDos.union(grafoOpcionTres)
     //!EJECUTAR MÉTODO QUE ME HACE LA UNIÓN Y LE PASO EL GRAFO SELECCIONADO
     mostrar()
 }

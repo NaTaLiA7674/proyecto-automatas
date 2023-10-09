@@ -301,9 +301,11 @@ class Grafo {
          * */
 
     eliminarEstadosInalcanzables() {
-
+        this.visitadosCp = []
+        console.log("Estados inicial:", this.getEstadosIniciales()[0])
+        // adyacente de los estados iniciales
+        console.log(this.getVertice(this.getEstadosIniciales()[0]).ListaAdyacentes)
         this.recorridoProfundidad(this.getEstadosIniciales()[0]) // prevenir por si llegan varios -que no debería pasar
-
         const estadosAlcanzables = this.getVisitadosp()
 
         // recorrer los estados alcanzables y guardarlos en una lista sin repetir
@@ -347,6 +349,85 @@ class Grafo {
         this.listaVertices = this.listaVertices.filter(verticeF => {
             return verticeF.GetDato() !== vertice
         })
+    }
+
+    /** Hace la unión de dos autómatas
+     */
+
+    union(automata) {
+        // Realizar la combinación de los nombres de los estados
+
+         let estadosCombinados = []
+            this.listaVertices.forEach(vertice => {
+                automata.listaVertices.forEach(vertice2 => {
+                    if (!vertice.ListaAdyacentes.includes(vertice2)) {
+                        estadosCombinados.push(vertice.GetDato() + vertice2.GetDato())
+                    }
+                })
+            })
+        // Crear un nuevo autómata con los estados combinados
+            estadosCombinados.forEach(estado => {
+                this.ingresarVertices(estado)
+            })
+
+        // Obtener los estados iniciales de cada autómata
+            let estadosI=[]
+            this.listaVertices.forEach(vertice => {
+                if(vertice.GetEstadoInicial()){
+                    estadosI.push(vertice.GetDato())
+                }})
+            automata.listaVertices.forEach(vertice => {
+                if(vertice.GetEstadoInicial()){
+                    estadosI.push(vertice.GetDato())
+                }})
+            
+        // Crear un nuevo estado inicial con la concatenación de los estados iniciales de cada autómata
+            let estadoInicial = estadosI.join("")
+            console.log(estadoInicial)
+        // Ingresar el estado inicial
+            this.ingresarVertices(estadoInicial)
+            this.getVertice(estadoInicial).SetEstadoInicial(true)
+        // // Eliminar los estados iniciales de cada autómata
+        //     estadosI.forEach(estado => {
+        //         this.eliminarVertice(estado)
+        //     })
+
+        // Obtener los estados finales de cada autómata
+            let estadosF=[]
+            this.listaVertices.forEach(vertice => {
+                if(vertice.GetEstadoFinal()){
+                    estadosF.push(vertice.GetDato())
+                }  
+            })
+            automata.listaVertices.forEach(vertice => {
+                if(vertice.GetEstadoFinal()){
+                    estadosF.push(vertice.GetDato())
+                }
+            })
+        // Crear nuevos estados finales 
+            let estadosFinales = []
+            estadosCombinados.forEach(estado => {
+                estadosF.forEach(estadoF => {
+                    if(estado.includes(estadoF)){
+                        estadosFinales.push(estado)
+                        estadosFinales = [...new Set(estadosFinales)] // sin repetir
+                    }
+                })
+            })
+            // Ingresar los estados finales
+            estadosFinales.forEach(estado => {
+                this.ingresarVertices(estado)
+                this.getVertice(estado).SetEstadoFinal(true)
+            })
+        // // Eliminar los estados finales de cada autómata
+        //     estadosF.forEach(estado => {
+        //         this.eliminarVertice(estado)
+        //     })
+
+            console.log( this.listaVertices)
+
+
+        
     }
 
 }
