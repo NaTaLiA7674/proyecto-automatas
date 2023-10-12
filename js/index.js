@@ -229,9 +229,9 @@ function mostrar() {
                 curve: go.Link.Bezier,
                 routing: go.Link.AvoidsNodes,
             },
-            go.GraphObject.make(go.Shape, { stroke: "white" }),
-            go.GraphObject.make(go.Shape, { toArrow: "OpenTriangle", stroke: "white", fill: "white" }),
-            go.GraphObject.make(go.TextBlock, { stroke: "white", font: "bold 12px sans-serif" }, new go.Binding("text", "text"))
+            go.GraphObject.make(go.Shape, { stroke: "dark" }),
+            go.GraphObject.make(go.Shape, { toArrow: "OpenTriangle", stroke: "dark", fill: "dark" }),
+            go.GraphObject.make(go.TextBlock, { stroke: "dark", font: "bold 12px sans-serif" }, new go.Binding("text", "text"))
         )
 
     const estadosIniciales = g.getEstadosIniciales()
