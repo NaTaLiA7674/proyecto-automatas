@@ -20,7 +20,7 @@
 
 <body>
 
-  <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
+  <nav class="navbar navbar-dark navbar-expand-lg bg-primary">
     <div class="container-fluid">
       <span class="navbar-brand mb-0 h1 text-white"><img
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Logo_de_la_Universidad_de_Caldas.svg/1200px-Logo_de_la_Universidad_de_Caldas.svg.png"
@@ -31,45 +31,48 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <li class="nav-item mx-4 my-2">
-            <button id="a1" class="btn btn-outline-primary">Autómata 1</button>
+          <li class="nav-item mx-4 my-2 bg-success rounded">
+            <button id="a1" class="btn text-white">Autómata 1</button>
           </li>
-          <li class="nav-item mx-4 my-2">
-            <button id="a2" class="btn btn-outline-primary">Autómata 2</button>
+          <li class="nav-item mx-4 my-2 bg-success rounded">
+            <button id="a2" class="btn text-white">Autómata 2</button>
           </li>
-          <li class="nav-item mx-4 my-2">
-            <button id="a3" class="btn btn-outline-primary">pruebas</button>
+          <li class="nav-item mx-4 my-2 bg-success rounded">
+            <button id="a3" class="btn text-white">Autómata 3</button>
           </li>
-          <li class="nav-item mx-4 my-2">
-            <button id="complemento" class="btn btn-outline-primary">Complemento</button>
+          <li class="nav-item mx-4 my-2 bg-success rounded">
+            <button id="complemento" class="btn text-white">Complemento</button>
           </li>
-          <li class="nav-item mx-4 my-2">
-            <button id="reverso" class="btn btn-outline-primary">Reverso</button>
+          <li class="nav-item mx-4 my-2 bg-success rounded">
+            <button id="reverso" class="btn text-white">Reverso</button>
           </li>
-          <li class="nav-item mx-4 my-2">
-            <button id="union" class="btn btn-outline-primary">Unión</button>
+          <li class="nav-item mx-4 my-2 bg-success rounded">
+            <button id="union" class="btn text-white">Unión</button>
           </li>
-          <li class="nav-item mx-4 my-2">
-            <button id="inter" class="btn btn-outline-primary">Intersección</button>
+          <li class="nav-item mx-4 my-2 bg-success rounded">
+            <button id="inter" class="btn text-white">Intersección</button>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <div class="py-4 px-4 text-white bg-dark" id="estadosIniciales">
-    <span class="fw-bold">Estados iniciales del autómata:</span>
+  <div class="d-flex bg-primary">
+    <div class="flex-fill py-4 px-4 text-white" id="estadosIniciales">
+      <span class="fw-bold">Estados iniciales del autómata:</span>
+    </div>
+  
+    <div class="flex-fill py-4 px-4 text-white" id="estadosNormales">
+      <span class="fw-bold">Estados normales del autómata:</span>
+    </div>
+  
+    <div class="flex-fill py-4 px-4 text-white" id="estadosFinales">
+      <span class="fw-bold">Estados finales del autómata:</span>
+    </div>
   </div>
+  
 
-  <div class="py-4 px-4 text-white bg-dark" id="estadosNormales">
-    <span class="fw-bold">Estados normales del autómata:</span>
-  </div>
-
-  <div class="py-4 px-4 text-white bg-dark" id="estadosFinales">
-    <span class="fw-bold">Estados finales del autómata:</span>
-  </div>
-
-  <div id="diagram" style="width:100%; height:100vh;" class="bg-dark"></div>
+  <div id="diagram" style="width:100%; height:100vh;" class="bg-light"></div>
 </body>
 
 </html>

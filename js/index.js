@@ -18,45 +18,28 @@ g.ingresarArista("C", "C", 1)
 g.ingresarArista("A", "D", 1)
 g.ingresarArista("B", "D", 1)
 
-let grafoOpcionUno = new Grafo()
-grafoOpcionUno.ingresarVertices("A")
-grafoOpcionUno.ingresarVertices("B")
-grafoOpcionUno.ingresarVertices("C")
-grafoOpcionUno.ingresarVertices("D")
-grafoOpcionUno.getVertice("A").SetEstadoFinal(true)
-grafoOpcionUno.getVertice("B").SetEstadoFinal(true)
-grafoOpcionUno.getVertice("D").SetEstadoFinal(true)
-grafoOpcionUno.getVertice("A").SetEstadoInicial(true)
 
-grafoOpcionUno.ingresarArista("A", "B", 0)
-grafoOpcionUno.ingresarArista("B", "C", 0)
-grafoOpcionUno.ingresarArista("C", "C", 0)
-grafoOpcionUno.ingresarArista("C", "C", 1)
-grafoOpcionUno.ingresarArista("A", "D", 1)
-grafoOpcionUno.ingresarArista("B", "D", 1)
-
+let grafoopcionUno = new Grafo()
+grafoopcionUno.ingresarVertices("A")
+grafoopcionUno.ingresarVertices("B")
+grafoopcionUno.getVertice("A").SetEstadoInicial(true)
+grafoopcionUno.getVertice("B").SetEstadoFinal(true)
+grafoopcionUno.ingresarArista("A", "A", 0)
+grafoopcionUno.ingresarArista("A", "B", 1)
+grafoopcionUno.ingresarArista("B", "B", 0)
+grafoopcionUno.ingresarArista("B", "B", 1)
 
 let grafoOpcionDos = new Grafo()
-grafoOpcionDos.ingresarVertices("A")
-grafoOpcionDos.ingresarVertices("B")
-grafoOpcionDos.getVertice("A").SetEstadoInicial(true)
-grafoOpcionDos.getVertice("B").SetEstadoFinal(true)
-grafoOpcionDos.ingresarArista("A", "A", 0)
-grafoOpcionDos.ingresarArista("A", "B", 1)
-grafoOpcionDos.ingresarArista("B", "B", 0)
-grafoOpcionDos.ingresarArista("B", "B", 1)
+grafoOpcionDos.ingresarVertices("C")
+grafoOpcionDos.ingresarVertices("D")
+grafoOpcionDos.getVertice("C").SetEstadoInicial(true)
+grafoOpcionDos.getVertice("D").SetEstadoFinal(true)
+grafoOpcionDos.ingresarArista("C", "C", 1)
+grafoOpcionDos.ingresarArista("C", "D", 0)
+grafoOpcionDos.ingresarArista("D", "D", 0)
+grafoOpcionDos.ingresarArista("D", "D", 1)
 
-let grafoOpcionTres = new Grafo()
-grafoOpcionTres.ingresarVertices("C")
-grafoOpcionTres.ingresarVertices("D")
-grafoOpcionTres.getVertice("C").SetEstadoInicial(true)
-grafoOpcionTres.getVertice("D").SetEstadoFinal(true)
-grafoOpcionTres.ingresarArista("C", "C", 1)
-grafoOpcionTres.ingresarArista("C", "D", 0)
-grafoOpcionTres.ingresarArista("D", "D", 0)
-grafoOpcionTres.ingresarArista("D", "D", 1)
-
-const opcionesGrafos = [grafoOpcionUno, grafoOpcionDos, grafoOpcionTres]
+const opcionesGrafos = [grafoopcionUno, grafoOpcionDos]
 
 let $ = go.GraphObject.make
 let diagram = null
@@ -65,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     diagram = $(go.Diagram, "diagram")
     mostrar()
-
+    // ESTE ES EL MISMO DE LA OPCION 1
     document.querySelector("#a1").addEventListener("click", function () {
         g.reiniciarGrafo()
         g.ingresarVertices("A")
@@ -81,34 +64,47 @@ document.addEventListener("DOMContentLoaded", function () {
 
     })
 
+
     document.querySelector("#a2").addEventListener("click", function () {
         g.reiniciarGrafo()
-        g.ingresarVertices("A")
-        g.ingresarVertices("B")
         g.ingresarVertices("C")
         g.ingresarVertices("D")
-        g.ingresarVertices("E")
-        g.ingresarVertices("F")
-        g.ingresarVertices("G")
-        g.ingresarVertices("H")
-        g.ingresarVertices("I")
-        g.ingresarVertices("J")
-        g.getVertice("J").SetEstadoFinal(true)
-        g.getVertice("A").SetEstadoInicial(true)
-
-        g.ingresarArista("A", "B", 0)
-        g.ingresarArista("B", "C", "")
-        g.ingresarArista("C", "D", "")
+        g.getVertice("C").SetEstadoInicial(true)
+        g.getVertice("D").SetEstadoFinal(true)
+        g.ingresarArista("C", "C", 1)
         g.ingresarArista("C", "D", 0)
-        g.ingresarArista("D", "E", "")
-        g.ingresarArista("E", "F", "")
-        g.ingresarArista("E", "H", "")
-        g.ingresarArista("F", "G", 0)
-        g.ingresarArista("H", "I", 1)
-        g.ingresarArista("G", "J", "")
-        g.ingresarArista("I", "J", "")
+        g.ingresarArista("D", "D", 0)
+        g.ingresarArista("D", "D", 1)
 
         mostrar()
+
+        // g.reiniciarGrafo()
+        // g.ingresarVertices("A")
+        // g.ingresarVertices("B")
+        // g.ingresarVertices("C")
+        // g.ingresarVertices("D")
+        // g.ingresarVertices("E")
+        // g.ingresarVertices("F")
+        // g.ingresarVertices("G")
+        // g.ingresarVertices("H")
+        // g.ingresarVertices("I")
+        // g.ingresarVertices("J")
+        // g.getVertice("J").SetEstadoFinal(true)
+        // g.getVertice("A").SetEstadoInicial(true)
+
+        // g.ingresarArista("A", "B", 0)
+        // g.ingresarArista("B", "C", "")
+        // g.ingresarArista("C", "D", "")
+        // g.ingresarArista("C", "D", 0)
+        // g.ingresarArista("D", "E", "")
+        // g.ingresarArista("E", "F", "")
+        // g.ingresarArista("E", "H", "")
+        // g.ingresarArista("F", "G", 0)
+        // g.ingresarArista("H", "I", 1)
+        // g.ingresarArista("G", "J", "")
+        // g.ingresarArista("I", "J", "")
+
+        // mostrar()
 
     })
 
@@ -147,8 +143,6 @@ document.addEventListener("DOMContentLoaded", function () {
         interseccion()
     })
 
-
-
 })
 
 function obtenerGrafoAleatorio() {
@@ -167,16 +161,160 @@ function reverso() {
 }
 
 function union() {
-    let grafoSeleccionado = obtenerGrafoAleatorio()
-    grafoOpcionDos.union(grafoOpcionTres)
+    // let grafoSeleccionado = obtenerGrafoAleatorio()
+    const grafoUnion= grafoopcionUno.union(grafoopcionUno, grafoOpcionDos)
+     //obtiene los nombres de los vertices del grafo
+     const nodes = grafoUnion.getNombreVertices()
+
+     const nodeDataArray = []
+     nodes.forEach(node => {
+         nodeDataArray.push({ key: node, name: node })
+     })
+ 
+     //obtiene las aristas del grafo
+     const links = grafoUnion.getAristas()
+ 
+     const linkDataArray = []
+ 
+     links.forEach(link => {
+         linkDataArray.push({ from: link.Origen.dato, to: link.Destino.dato, text: `${link.GetPeso()}` })
+     })
+ 
+ 
+     diagram.model = $(go.GraphLinksModel, {
+         nodeDataArray: nodeDataArray,
+         linkDataArray: linkDataArray
+     })
+ 
+     diagram.layout = $(go.LayeredDigraphLayout, {
+         direction: 0,
+         layerSpacing: 50,
+         columnSpacing: 50
+     })
+ 
+ 
+     diagram.nodeTemplate = $(go.Node, "Auto",
+         $(go.Shape, "Circle", { fill: "#00FFB5", strokeWidth: 2, stroke: "black" }),
+         $(go.TextBlock, { margin: 8, font: "bold 12 px sans-serif" }, new go.Binding("text", "name"))
+     )
+     diagram.linkTemplate =
+         go.GraphObject.make(go.Link,
+             {
+                 curve: go.Link.Bezier,
+                 routing: go.Link.AvoidsNodes,
+             },
+             go.GraphObject.make(go.Shape, { stroke: "dark" }),
+             go.GraphObject.make(go.Shape, { toArrow: "OpenTriangle", stroke: "dark", fill: "dark" }),
+             go.GraphObject.make(go.TextBlock, { stroke: "dark", font: "bold 12px sans-serif" }, new go.Binding("text", "text"))
+         )
+ 
+     const estadosIniciales = grafoUnion.getEstadosIniciales()//getEstadosIniciales()
+     let textIni = ""
+     //se recorre el array de estados finales y se agrega al texto
+     estadosIniciales.forEach(estado => {
+         textIni += `${estado} ` //  
+     })
+     const textoIni = document.querySelector("#estadosIniciales")
+     textoIni.innerHTML = `<span class="fw-bold">Estados iniciales del autómata:</span> ${textIni}`
+ 
+     const estadosNormales = grafoUnion.getEstadosNoFinales()
+     let textNor = ""
+ 
+     estadosNormales.forEach(estado => {
+         textNor += `${estado} `
+     })
+     const textoNor = document.querySelector("#estadosNormales")
+     textoNor.innerHTML = `<span class="fw-bold">Estados normales del autómata:</span> ${textNor}`
+ 
+ 
+     const estadosFinales = grafoUnion.getEstadosFinales()
+     let textFin = ""
+     //se recorre el array de estados finales y se agrega al texto
+     estadosFinales.forEach(estado => {
+         textFin += `${estado} ` //  
+     })
+     const textoFin = document.querySelector("#estadosFinales")
+     textoFin.innerHTML = `<span class="fw-bold">Estados finales del autómata:</span> ${textFin}`
     //!EJECUTAR MÉTODO QUE ME HACE LA UNIÓN Y LE PASO EL GRAFO SELECCIONADO
-    mostrar()
 }
 
 function interseccion() {
-    let grafoSeleccionado = obtenerGrafoAleatorio()
+    const grafinterseccion = grafoopcionUno.interseccion(grafoopcionUno, grafoOpcionDos)
+
+    //obtiene los nombres de los vertices del grafo
+    const nodes = grafinterseccion.getNombreVertices()
+
+    const nodeDataArray = []
+    nodes.forEach(node => {
+        nodeDataArray.push({ key: node, name: node })
+    })
+
+    //obtiene las aristas del grafo
+    const links = grafinterseccion.getAristas()
+
+    const linkDataArray = []
+
+    links.forEach(link => {
+        linkDataArray.push({ from: link.Origen.dato, to: link.Destino.dato, text: `${link.GetPeso()}` })
+    })
+
+
+    diagram.model = $(go.GraphLinksModel, {
+        nodeDataArray: nodeDataArray,
+        linkDataArray: linkDataArray
+    })
+
+    diagram.layout = $(go.LayeredDigraphLayout, {
+        direction: 0,
+        layerSpacing: 50,
+        columnSpacing: 50
+    })
+
+
+    diagram.nodeTemplate = $(go.Node, "Auto",
+        $(go.Shape, "Circle", { fill: "#00FFB5", strokeWidth: 2, stroke: "black" }),
+        $(go.TextBlock, { margin: 8, font: "bold 12 px sans-serif" }, new go.Binding("text", "name"))
+    )
+    diagram.linkTemplate =
+        go.GraphObject.make(go.Link,
+            {
+                curve: go.Link.Bezier,
+                routing: go.Link.AvoidsNodes,
+            },
+            go.GraphObject.make(go.Shape, { stroke: "dark" }),
+            go.GraphObject.make(go.Shape, { toArrow: "OpenTriangle", stroke: "dark", fill: "dark" }),
+            go.GraphObject.make(go.TextBlock, { stroke: "dark", font: "bold 12px sans-serif" }, new go.Binding("text", "text"))
+        )
+
+    const estadosIniciales = grafinterseccion.getEstadosIniciales()//getEstadosIniciales()
+    let textIni = ""
+    //se recorre el array de estados finales y se agrega al texto
+    estadosIniciales.forEach(estado => {
+        textIni += `${estado} ` //  
+    })
+    const textoIni = document.querySelector("#estadosIniciales")
+    textoIni.innerHTML = `<span class="fw-bold">Estados iniciales del autómata:</span> ${textIni}`
+
+    const estadosNormales = grafinterseccion.getEstadosNoFinales()
+    let textNor = ""
+
+    estadosNormales.forEach(estado => {
+        textNor += `${estado} `
+    })
+    const textoNor = document.querySelector("#estadosNormales")
+    textoNor.innerHTML = `<span class="fw-bold">Estados normales del autómata:</span> ${textNor}`
+
+
+    const estadosFinales = grafinterseccion.getEstadosFinales()
+    let textFin = ""
+    //se recorre el array de estados finales y se agrega al texto
+    estadosFinales.forEach(estado => {
+        textFin += `${estado} ` //  
+    })
+    const textoFin = document.querySelector("#estadosFinales")
+    textoFin.innerHTML = `<span class="fw-bold">Estados finales del autómata:</span> ${textFin}`
     //!EJECUTAR MÉTODO QUE ME HACE LA INTERSECCIÓN Y LE PASO EL GRAFO SELECCIONADO
-    mostrar()
+    //mostrar()
 }
 
 function createArrayOfNodesGrafo() {

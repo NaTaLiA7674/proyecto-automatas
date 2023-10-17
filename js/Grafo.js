@@ -169,7 +169,6 @@ class Grafo {
                 }
             }
         }
-        this.cantidadVerticesVisitadosProfundidad()
     }
 
     // Método que me cuente la cantidad de vértices visitados por recorrido de profundidad
@@ -302,9 +301,7 @@ class Grafo {
 
     eliminarEstadosInalcanzables() {
         this.visitadosCp = []
-        console.log("Estados inicial:", this.getEstadosIniciales()[0])
         // adyacente de los estados iniciales
-        console.log(this.getVertice(this.getEstadosIniciales()[0]).ListaAdyacentes)
         this.recorridoProfundidad(this.getEstadosIniciales()[0]) // prevenir por si llegan varios -que no debería pasar
         const estadosAlcanzables = this.getVisitadosp()
 
@@ -351,83 +348,156 @@ class Grafo {
         })
     }
 
-    /** Hace la unión de dos autómatas
-     */
+    // Elimina una arista
+    eliminarArista(arista) {
+        this.listaAristas = this.listaAristas.filter(aristaF => {
+            return aristaF.Origen.GetDato() !== arista.Origen.GetDato() && aristaF.Destino.GetDato() !== arista.Destino.GetDato() && aristaF.Peso !== arista.Peso
+        }
+        )
+    }
 
-    union(automata) {
-        // Realizar la combinación de los nombres de los estados
-
-         let estadosCombinados = []
-            this.listaVertices.forEach(vertice => {
-                automata.listaVertices.forEach(vertice2 => {
-                    if (!vertice.ListaAdyacentes.includes(vertice2)) {
-                        estadosCombinados.push(vertice.GetDato() + vertice2.GetDato())
-                    }
-                })
-            })
-        // Crear un nuevo autómata con los estados combinados
-            estadosCombinados.forEach(estado => {
-                this.ingresarVertices(estado)
-            })
-
-        // Obtener los estados iniciales de cada autómata
-            let estadosI=[]
-            this.listaVertices.forEach(vertice => {
-                if(vertice.GetEstadoInicial()){
-                    estadosI.push(vertice.GetDato())
-                }})
-            automata.listaVertices.forEach(vertice => {
-                if(vertice.GetEstadoInicial()){
-                    estadosI.push(vertice.GetDato())
-                }})
-            
-        // Crear un nuevo estado inicial con la concatenación de los estados iniciales de cada autómata
-            let estadoInicial = estadosI.join("")
-            console.log(estadoInicial)
-        // Ingresar el estado inicial
-            this.ingresarVertices(estadoInicial)
-            this.getVertice(estadoInicial).SetEstadoInicial(true)
-        // // Eliminar los estados iniciales de cada autómata
-        //     estadosI.forEach(estado => {
-        //         this.eliminarVertice(estado)
-        //     })
-
-        // Obtener los estados finales de cada autómata
-            let estadosF=[]
-            this.listaVertices.forEach(vertice => {
-                if(vertice.GetEstadoFinal()){
-                    estadosF.push(vertice.GetDato())
-                }  
-            })
-            automata.listaVertices.forEach(vertice => {
-                if(vertice.GetEstadoFinal()){
-                    estadosF.push(vertice.GetDato())
-                }
-            })
-        // Crear nuevos estados finales 
-            let estadosFinales = []
-            estadosCombinados.forEach(estado => {
-                estadosF.forEach(estadoF => {
-                    if(estado.includes(estadoF)){
+    union(automata1, automata2) {
+        // Crear un nuevo autómata para la unión
+        const resultado = new Grafo();
+    
+        // Crear estados combinados
+        const estadosCombinados = [];
+        automata1.getListaVertices().forEach(estado1 => {
+            automata2.getListaVertices().forEach(estado2 => {
+                const nuevoEstado = estado1.GetDato() + estado2.GetDato(); // Combinación de nombres de estados
+                estadosCombinados.push(nuevoEstado);
+            });
+        });
+    
+        // Ingresar estados combinados al nuevo autómata
+        estadosCombinados.forEach(estado => {
+            resultado.ingresarVertices(estado);
+        });
+    
+        // Obtener estados iniciales y finales de cada autómata
+        const estadosIniciales1 = automata1.getEstadosIniciales();
+        const estadosIniciales2 = automata2.getEstadosIniciales();
+        const estadosFinales1 = automata1.getEstadosFinales();
+        const estadosFinales2 = automata2.getEstadosFinales();
+    
+        // Crear estado inicial de la intersección
+        const estadoInicialInterseccion = estadosIniciales1[0] + estadosIniciales2[0];
+        resultado.ingresarVertices(estadoInicialInterseccion);
+        resultado.getVertice(estadoInicialInterseccion).SetEstadoInicial(true);
+        
+        let estadosFinales = []
+        // Crear estados de aceptación de la intersección
+        estadosCombinados.forEach(estado => {
+            estadosFinales1.forEach(estadoF1 => {
+                estadosFinales2.forEach(estadoF2 => {
+                    if (estado.includes(estadoF1) || estado.includes(estadoF2)) {
                         estadosFinales.push(estado)
                         estadosFinales = [...new Set(estadosFinales)] // sin repetir
-                    }
-                })
+                    }                
+            });
+
+            estadosFinales.forEach(estadoF => {
+                resultado.ingresarVertices(estadoF);
+                resultado.getVertice(estadoF).SetEstadoFinal(true);
             })
-            // Ingresar los estados finales
-            estadosFinales.forEach(estado => {
-                this.ingresarVertices(estado)
-                this.getVertice(estado).SetEstadoFinal(true)
-            })
-        // // Eliminar los estados finales de cada autómata
-        //     estadosF.forEach(estado => {
-        //         this.eliminarVertice(estado)
-        //     })
 
-            console.log( this.listaVertices)
+        });
+    })
+        // Crear transiciones para la intersección
+        const alfabeto1 = resultado.obtenerAlfabeto(automata1);
+        const alfabeto2 = resultado.obtenerAlfabeto(automata2);
+    
+        estadosCombinados.forEach(estado => {
+            alfabeto1.forEach(simbolo => {
+                const transiciones1 = resultado.obtenerTransiciones(automata1, estado.substr(0, 1), simbolo);
+                const transiciones2 = resultado.obtenerTransiciones(automata2, estado.substr(1, 1), simbolo);
+                if (transiciones1.length > 0 && transiciones2.length > 0) { // si hay transiciones
+                    const destino = transiciones1[0] + transiciones2[0]; // 
+                    resultado.ingresarArista(estado, destino, simbolo);
+                }
+            });
+        });
+    
+        return resultado;
+    
+  }
 
+    interseccion(automata1, automata2) {
+        // Crear un nuevo autómata para la intersección
+        const resultado = new Grafo();
+    
+        // Crear estados combinados
+        const estadosCombinados = [];
+        automata1.getListaVertices().forEach(estado1 => {
+            automata2.getListaVertices().forEach(estado2 => {
+                const nuevoEstado = estado1.GetDato() + estado2.GetDato(); // Combinación de nombres de estados
+                estadosCombinados.push(nuevoEstado);
+            });
+        });
+    
+        // Ingresar estados combinados al nuevo autómata
+        estadosCombinados.forEach(estado => {
+            resultado.ingresarVertices(estado);
+        });
+    
+        // Obtener estados iniciales y finales de cada autómata
+        const estadosIniciales1 = automata1.getEstadosIniciales();
+        const estadosIniciales2 = automata2.getEstadosIniciales();
+        const estadosFinales1 = automata1.getEstadosFinales();
+        const estadosFinales2 = automata2.getEstadosFinales();
+    
+        // Crear estado inicial de la intersección
+        const estadoInicialInterseccion = estadosIniciales1[0] + estadosIniciales2[0];
+        resultado.ingresarVertices(estadoInicialInterseccion);
+        resultado.getVertice(estadoInicialInterseccion).SetEstadoInicial(true);
+    
+        // Crear estados de aceptación de la intersección
+        estadosFinales1.forEach(estado1 => {
+            estadosFinales2.forEach(estado2 => {
+                const estadoFinal = estado1 + estado2;
+                resultado.ingresarVertices(estadoFinal);
+                resultado.getVertice(estadoFinal).SetEstadoFinal(true);
+            });
+        });
+    
+        // Crear transiciones para la intersección
+        const alfabeto1 = resultado.obtenerAlfabeto(automata1);
+        const alfabeto2 = resultado.obtenerAlfabeto(automata2);
+    
+        estadosCombinados.forEach(estado => {
+            alfabeto1.forEach(simbolo => {
+                const transiciones1 = resultado.obtenerTransiciones(automata1, estado.substr(0, 1), simbolo);
+                const transiciones2 = resultado.obtenerTransiciones(automata2, estado.substr(1, 1), simbolo);
+                if (transiciones1.length > 0 && transiciones2.length > 0) { // si hay transiciones
+                    const destino = transiciones1[0] + transiciones2[0]; // 
+                    resultado.ingresarArista(estado, destino, simbolo);
+                }
+            });
+        });
+    
+        return resultado;
+    }
 
-        
+    // Función para obtener el alfabeto de un autómata: funciona así: recorre las aristas y va agregando los pesos a un set, 
+    //luego lo convierte a array
+
+    obtenerAlfabeto(automata) {
+        const alfabeto = new Set();
+        automata.getAristas().forEach(arista => {
+            alfabeto.add(arista.Peso);
+        });
+        return Array.from(alfabeto);
+    }
+    
+    // Función para obtener las transiciones desde un estado con un símbolo en un autómata
+    obtenerTransiciones(automata, estado, simbolo) {
+        const transiciones = [];
+        automata.getAristas().forEach(arista => {
+            if (arista.Origen.GetDato() === estado && arista.Peso === simbolo) {
+                transiciones.push(arista.Destino.GetDato());
+            }
+        });
+        return transiciones;
     }
 
 }
